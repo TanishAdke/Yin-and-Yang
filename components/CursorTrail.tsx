@@ -3,102 +3,108 @@
 import React, { useEffect, useRef } from "react";
 
 export default function CursorTrail() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const points = useRef<{ x: number; y: number; age: number; speed: number }[]>([]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext("2d");
-    let animationFrameId;
-    let points = [];
-    
-    // REDUCED: The trail vanishes much faster now to prevent screen clutter
-    const MAX_AGE = 25;
+    if (!ctx) return;
 
-    const resizeCanvas = () => {
+    // --- SETTINGS ---
+    const NORMAL_LIFE = 12; // Length of trail when slow
+    const SPEED_LIFE = 30;  // Length of trail when fast
+    const THRESHOLD = 35;   // Speed needed to trigger the "Long Line"
+
+    const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
 
-    const onMouseMove = (e) => {
-      points.push({
-        x: e.clientX,
-        y: e.clientY,
-        age: 0,
+    const handleMouseMove = (e: MouseEvent) => {
+      const lastPoint = points.current[points.current.length - 1];
+      let currentSpeed = 0;
+
+      if (lastPoint) {
+        const dx = e.clientX - lastPoint.x;
+        const dy = e.clientY - lastPoint.y;
+        currentSpeed = Math.sqrt(dx * dx + dy * dy);
+      }
+
+      points.current.push({ 
+        x: e.clientX, 
+        y: e.clientY, 
+        age: 0, 
+        speed: currentSpeed 
       });
     };
-    window.addEventListener("mousemove", onMouseMove);
+
+    window.addEventListener("resize", resize);
+    window.addEventListener("mousemove", handleMouseMove);
+    resize();
 
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      points.forEach((p) => (p.age += 1));
-      points = points.filter((p) => p.age < MAX_AGE);
+      // 1. Update Age
+      points.current.forEach(p => p.age++);
 
-      if (points.length > 1) {
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
+      // 2. Filter out old points
+      // If the point was created during a high-speed move, it lives longer
+      points.current = points.current.filter(p => {
+        const lifeSpan = p.speed > THRESHOLD ? SPEED_LIFE : NORMAL_LIFE;
+        return p.age < lifeSpan;
+      });
 
-        for (let i = 1; i < points.length; i++) {
-          const p0 = points[i - 1];
-          const p1 = points[i];
-
-          const dx = p1.x - p0.x;
-          const dy = p1.y - p0.y;
-          const speed = Math.sqrt(dx * dx + dy * dy);
+      // 3. Draw the Trail
+      if (points.current.length > 1) {
+        for (let i = 1; i < points.current.length; i++) {
+          const p0 = points.current[i - 1];
+          const p1 = points.current[i];
           
-          const ageProgress = p1.age / MAX_AGE;
-          
-          // Sharper taper curve for a faster needle-point drop off
-          const ageFactor = Math.pow(Math.max(0, 1 - ageProgress), 2);
+          // Calculate fade based on age vs its specific lifespan
+          const lifeSpan = p1.speed > THRESHOLD ? SPEED_LIFE : NORMAL_LIFE;
+          const opacity = 1 - (p1.age / lifeSpan);
 
-          // REDUCED: Extremely thin base line (2.5px max)
-          const baseThickness = Math.max(0.5, 2.5 - speed * 0.05); 
-          const thickness = baseThickness * ageFactor; 
-          
-          // REDUCED: Max opacity is only 40%, fading to 0. It's a true "ghost" trail now.
-          const opacity = Math.max(0, 1 - ageProgress) * 0.4; 
-
-          // Core Stroke
           ctx.beginPath();
           ctx.moveTo(p0.x, p0.y);
           ctx.lineTo(p1.x, p1.y);
-          ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`; 
-          ctx.lineWidth = thickness;
-          ctx.stroke();
 
-          // Delicate Feather Edge (Opacity reduced to just 10% for the barest hint of texture)
-          const angle = Math.atan2(dy, dx);
-          const offset = thickness * 0.8; 
-          
-          ctx.beginPath();
-          ctx.moveTo(p0.x + Math.cos(angle + Math.PI/2) * offset, p0.y + Math.sin(angle + Math.PI/2) * offset);
-          ctx.lineTo(p1.x + Math.cos(angle + Math.PI/2) * offset, p1.y + Math.sin(angle + Math.PI/2) * offset);
-          ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.25})`;
-          ctx.lineWidth = 0.2;
+          // THE STRETCH EFFECT:
+          // Fast movements get a thicker, brighter glow
+          if (p1.speed > THRESHOLD) {
+            ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.8})`;
+            ctx.lineWidth = 2.5 * opacity;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "white";
+          } else {
+            ctx.strokeStyle = `rgba(255, 255, 255, ${opacity * 0.4})`;
+            ctx.lineWidth = 1.2 * opacity;
+            ctx.shadowBlur = 0;
+          }
+
+          ctx.lineCap = "round";
           ctx.stroke();
         }
       }
 
-      animationFrameId = requestAnimationFrame(render);
+      requestAnimationFrame(render);
     };
 
-    render();
+    const animId = requestAnimationFrame(render);
 
     return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      window.removeEventListener("mousemove", onMouseMove);
-      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(animId);
     };
   }, []);
 
   return (
     <canvas
       ref={canvasRef}
-      className="pointer-events-none fixed inset-0 z-[999] mix-blend-difference"
+      className="fixed inset-0 pointer-events-none z-[9999] mix-blend-difference"
     />
   );
 }
