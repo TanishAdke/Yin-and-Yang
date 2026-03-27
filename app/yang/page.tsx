@@ -3,13 +3,14 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import YinYangButton from "@/components/YinYangButton";
 
 const skills = [
-  { name: "React / Next.js", level: 95 },
-  { name: "TypeScript", level: 88 },
-  { name: "Tailwind CSS", level: 92 },
-  { name: "UI/UX Design", level: 80 },
-  { name: "Framer Motion", level: 85 },
+  { name: "Node.js / Express", level: 90 },
+  { name: "PostgreSQL / Prisma", level: 85 },
+  { name: "Docker / AWS", level: 75 },
+  { name: "System Architecture", level: 80 },
+  { name: "API Design", level: 92 },
 ];
 
 export default function YangPage() {
@@ -19,13 +20,12 @@ export default function YangPage() {
   const handleTransition = () => {
     setIsExiting(true);
     setTimeout(() => {
-      // Adjusted to teleport to your unified page
+      // Teleports to the unified fullstack page
       router.push("/fullstack"); 
     }, 600);
   };
 
   return (
-    // Inverted: bg-black text-white
     <main className="relative min-h-screen w-full bg-black text-white overflow-hidden flex items-center justify-center">
       <AnimatePresence>
         {isExiting && (
@@ -33,7 +33,6 @@ export default function YangPage() {
             initial={{ clipPath: "circle(0% at 50% 50%)" }}
             animate={{ clipPath: "circle(150% at 50% 50%)" }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
-            // Inverted: exit wipe is now white
             className="absolute inset-0 bg-white z-[100]"
           />
         )}
@@ -41,29 +40,16 @@ export default function YangPage() {
 
       <div className="max-w-6xl w-full px-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center z-10">
         
-        {/* BALL MOVED TO THE LEFT */}
+        {/* Left Side: The new YinYang button set to "yang" */}
         <div className="flex justify-center">
-          <motion.div 
-            onClick={handleTransition}
-            whileHover={{ scale: 1.1 }}
-            // Inverted: border-white
-            className="w-64 h-64 rounded-full border-[12px] border-white flex items-center justify-center cursor-pointer relative group"
-          >
-            <motion.div 
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-              // Inverted: bg-white
-              className="w-32 h-32 bg-white rounded-lg flex items-center justify-center text-center p-2"
-            >
-              {/* Inverted: text-black, updated text */}
-              <span className="text-black text-[10px] font-bold uppercase rotate-[-360] group-hover:scale-110 transition-transform">
-                Yin and Yang
-              </span>
-            </motion.div>
-          </motion.div>
+          <YinYangButton 
+            onClick={handleTransition} 
+            text="Yin and Yang" 
+            activePage="yang" 
+          />
         </div>
 
-        {/* TEXT AND SKILLS MOVED TO THE RIGHT */}
+        {/* Right Side: Yang / Backend Info */}
         <div>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -81,13 +67,11 @@ export default function YangPage() {
                   <span>{skill.name}</span>
                   <span>{skill.level}%</span>
                 </div>
-                {/* Inverted: bg-zinc-800 for the track */}
                 <div className="h-1 w-full bg-zinc-800">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${skill.level}%` }}
                     transition={{ duration: 1.5, ease: "circOut" }}
-                    // Inverted: bg-white for the fill
                     className="h-full bg-white" 
                   />
                 </div>

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import YinYangButton from "@/components/YinYangButton";
 
 const skills = [
   { name: "React / Next.js", level: 95 },
@@ -67,22 +68,13 @@ export default function YinPage() {
           </div>
         </div>
 
+        {/* The updated component with the highlight prop */}
         <div className="flex justify-center">
-          <motion.div 
-            onClick={handleTransition}
-            whileHover={{ scale: 1.1 }}
-            className="w-64 h-64 rounded-full border-[12px] border-black flex items-center justify-center cursor-pointer relative group"
-          >
-            <motion.div 
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-              className="w-32 h-32 bg-black rounded-lg flex items-center justify-center"
-            >
-              <span className="text-white text-[10px] font-bold uppercase rotate-[-360] group-hover:scale-110 transition-transform">
-                Go Yang
-              </span>
-            </motion.div>
-          </motion.div>
+          <YinYangButton 
+            onClick={handleTransition} 
+            text="Go Yang" 
+            activePage="yin" 
+          />
         </div>
       </div>
     </main>

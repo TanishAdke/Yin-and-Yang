@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import YinYangButton from "@/components/YinYangButton";
 
 export default function FullStackPage() {
   const router = useRouter();
@@ -56,18 +57,15 @@ export default function FullStackPage() {
         </motion.div>
       </section>
 
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
-        <motion.div
-          onClick={() => router.push("/")}
-          whileHover={{ rotate: 180, scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          className="w-32 h-32 md:w-44 md:h-44 rounded-full border-[12px] border-zinc-50 bg-white shadow-2xl flex flex-col overflow-hidden cursor-pointer group"
-        >
-          <div className="flex-1 bg-black w-full flex items-end justify-center pb-2">
-            <span className="text-[8px] text-white font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">Cycle</span>
-          </div>
-          <div className="flex-1 bg-white w-full" />
-        </motion.div>
+      {/* Replaced center button with the YinYang component */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex items-center justify-center">
+        <div className="bg-white rounded-full p-2 shadow-2xl">
+          <YinYangButton 
+            onClick={() => router.push("/")} 
+            text="Cycle" 
+            activePage="both" 
+          />
+        </div>
       </div>
 
       <section className="flex-1 bg-black text-white p-10 md:p-24 flex flex-col justify-center items-center md:items-start">
@@ -118,19 +116,19 @@ export default function FullStackPage() {
         ))}
       </motion.div>
 
-     <div className="absolute top-10 w-full flex justify-center pointer-events-none z-50">
-  <div className="flex w-full max-w-[100vw] text-[12px] font-black tracking-[1.8em] uppercase">
-    {/* Left Side - Black text on White background */}
-    <div className="w-1/2 text-right pr-4 text-black">
-      Tanish Adke 
-    </div>
-    
-    {/* Right Side - White text on Black background */}
-    <div className="w-1/2 text-left pl-4 text-white">
-       Class of 2027
-    </div>
-  </div>
-</div>
+      <div className="absolute top-10 w-full flex justify-center pointer-events-none z-50">
+        <div className="flex w-full max-w-[100vw] text-[12px] font-black tracking-[1.8em] uppercase">
+          {/* Left Side - Black text on White background */}
+          <div className="w-1/2 text-right pr-4 text-black">
+            Tanish Adke 
+          </div>
+          
+          {/* Right Side - White text on Black background */}
+          <div className="w-1/2 text-left pl-4 text-white">
+             Class of 2027
+          </div>
+        </div>
+      </div>
     </main>
   );
 }
