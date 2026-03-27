@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import YinYangButton from "@/components/YinYangButton";
 import BackgroundEffects from "@/components/BackgroundEffects";
+import MagneticWrapper from "@/components/MagneticWrapper"; // <-- Imported Magnet
 
 const skills = [
   { name: "Node.js / Express", level: 90 },
@@ -18,6 +19,8 @@ export default function YangPage() {
   const router = useRouter();
   const [isExiting, setIsExiting] = useState(false);
 
+  const cinematicEase = [0.16, 1, 0.3, 1];
+
   const handleTransition = () => {
     setIsExiting(true);
     setTimeout(() => {
@@ -25,13 +28,9 @@ export default function YangPage() {
     }, 1050);
   };
 
-  // A custom easing curve that starts fast and slows down beautifully
-  const cinematicEase = [0.16, 1, 0.3, 1];
-
   return (
     <main className="relative min-h-screen w-full bg-black text-white overflow-hidden flex items-center justify-center">
       
-      {/* FIX: Wrap the background effects in a slow 1.5s fade-in */}
       <motion.div 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }} 
@@ -41,7 +40,6 @@ export default function YangPage() {
         <BackgroundEffects />
       </motion.div>
 
-      {/* Exit Animation to Fullstack */}
       <AnimatePresence>
         {isExiting && (
           <motion.div
@@ -78,7 +76,6 @@ export default function YangPage() {
         </div>
 
         <div>
-          {/* FIX: Increased duration and used the cinematic easing curve */}
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -105,18 +102,21 @@ export default function YangPage() {
                 animate={{ opacity: 1, x: 0 }} 
                 transition={{ duration: 1.0, ease: cinematicEase, delay: 1.0 + (i * 0.1) }} 
               >
-                <div className="flex justify-between text-xs font-bold uppercase mb-1">
-                  <span>{skill.name}</span>
-                  <span>{skill.level}%</span>
-                </div>
-                <div className="h-1 w-full bg-zinc-800">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${skill.level}%` }}
-                    transition={{ duration: 1.8, ease: cinematicEase, delay: 1.2 + (i * 0.1) }} 
-                    className="h-full bg-white" 
-                  />
-                </div>
+                {/* INVERTED MAGNET: Stretches to pure white on hover */}
+                <MagneticWrapper className="py-2 group cursor-default">
+                  <div className="flex justify-between text-xs font-bold uppercase mb-1 text-white/60 group-hover:text-white transition-colors duration-300">
+                    <span className="group-hover:tracking-[0.2em] transition-all duration-300 ease-out">{skill.name}</span>
+                    <span>{skill.level}%</span>
+                  </div>
+                  <div className="h-1 w-full bg-zinc-900 overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${skill.level}%` }}
+                      transition={{ duration: 1.8, ease: cinematicEase, delay: 1.2 + (i * 0.1) }} 
+                      className="h-full bg-zinc-700 group-hover:bg-white transition-colors duration-300" 
+                    />
+                  </div>
+                </MagneticWrapper>
               </motion.div>
             ))}
           </div>
