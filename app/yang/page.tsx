@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import YinYangButton from "@/components/YinYangButton";
+import BackgroundEffects from "@/components/BackgroundEffects";
 
 const skills = [
   { name: "Node.js / Express", level: 90 },
@@ -20,49 +21,90 @@ export default function YangPage() {
   const handleTransition = () => {
     setIsExiting(true);
     setTimeout(() => {
-      // Teleports to the unified fullstack page
-      router.push("/fullstack"); 
-    }, 600);
+      router.push("/fullstack");
+    }, 1050);
   };
+
+  // A custom easing curve that starts fast and slows down beautifully
+  const cinematicEase = [0.16, 1, 0.3, 1];
 
   return (
     <main className="relative min-h-screen w-full bg-black text-white overflow-hidden flex items-center justify-center">
+      
+      {/* FIX: Wrap the background effects in a slow 1.5s fade-in */}
+      <motion.div 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        transition={{ duration: 1.5, ease: cinematicEase }}
+        className="absolute inset-0 pointer-events-none z-0"
+      >
+        <BackgroundEffects />
+      </motion.div>
+
+      {/* Exit Animation to Fullstack */}
       <AnimatePresence>
         {isExiting && (
           <motion.div
-            initial={{ clipPath: "circle(0% at 50% 50%)" }}
-            animate={{ clipPath: "circle(150% at 50% 50%)" }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="absolute inset-0 bg-white z-[100]"
-          />
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[100] bg-black flex items-center justify-center overflow-hidden"
+          >
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: "50vw" }}
+              transition={{ duration: 0.8, ease: cinematicEase, delay: 0.2 }}
+              className="absolute left-0 top-0 h-full bg-white border-r border-zinc-100"
+            />
+            <motion.div
+              initial={{ x: "-25vw" }}
+              animate={{ x: 0 }}
+              transition={{ duration: 0.8, ease: cinematicEase, delay: 0.2 }}
+              className="relative z-10 bg-white rounded-full p-2 shadow-2xl pointer-events-none"
+            >
+              <YinYangButton activePage="both" />
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
 
-      <div className="max-w-6xl w-full px-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center z-10">
-        
-        {/* Left Side: The new YinYang button set to "yang" */}
+      <motion.div 
+        animate={{ opacity: isExiting ? 0 : 1 }}
+        transition={{ duration: 0.2 }}
+        className="max-w-6xl w-full px-10 grid grid-cols-1 md:grid-cols-2 gap-10 items-center z-10"
+      >
         <div className="flex justify-center">
-          <YinYangButton 
-            onClick={handleTransition} 
-            text="Yin and Yang" 
-            activePage="yang" 
-          />
+          <YinYangButton onClick={handleTransition} text="Yin and Yang" activePage="yang" />
         </div>
 
-        {/* Right Side: Yang / Backend Info */}
         <div>
+          {/* FIX: Increased duration and used the cinematic easing curve */}
           <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, ease: cinematicEase, delay: 0.6 }} 
             className="text-7xl font-black uppercase mb-4"
           >
             Tanish Adke
           </motion.h1>
-          <p className="text-xl tracking-[0.3em] uppercase opacity-50 mb-12">Class of 2027 • Backend</p>
+          
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.5 }}
+            transition={{ duration: 1.2, ease: cinematicEase, delay: 0.8 }}
+            className="text-xl tracking-[0.3em] uppercase mb-12"
+          >
+            Class of 2027 • Backend
+          </motion.p>
           
           <div className="space-y-6">
             {skills.map((skill, i) => (
-              <motion.div key={skill.name} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.1 }}>
+              <motion.div 
+                key={skill.name} 
+                initial={{ opacity: 0, x: 20 }} 
+                animate={{ opacity: 1, x: 0 }} 
+                transition={{ duration: 1.0, ease: cinematicEase, delay: 1.0 + (i * 0.1) }} 
+              >
                 <div className="flex justify-between text-xs font-bold uppercase mb-1">
                   <span>{skill.name}</span>
                   <span>{skill.level}%</span>
@@ -71,7 +113,7 @@ export default function YangPage() {
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${skill.level}%` }}
-                    transition={{ duration: 1.5, ease: "circOut" }}
+                    transition={{ duration: 1.8, ease: cinematicEase, delay: 1.2 + (i * 0.1) }} 
                     className="h-full bg-white" 
                   />
                 </div>
@@ -79,8 +121,7 @@ export default function YangPage() {
             ))}
           </div>
         </div>
-
-      </div>
+      </motion.div>
     </main>
   );
 }
