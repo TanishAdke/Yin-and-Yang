@@ -17,3 +17,5 @@ TypeScript
 Framework used for animation: framer-motion
 The skillset used for this project is completely random, im not smart enough to know all of that with such proficiency lmfao
 anyhow, pretty cool project.
+
+PS: this project is being consistently updated to cater more towards my current skillset.
