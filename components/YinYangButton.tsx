@@ -2,11 +2,15 @@
 
 import React, { useState } from "react";
 import { motion, useAnimation } from "framer-motion";
+import { useNeonAudio } from "@/app/hooks/useNeonAudio";
 
 export default function YinYangButton({ onClick, text, activePage }) {
   const isYinActive = activePage === "yin" || activePage === "both";
   const isYangActive = activePage === "yang" || activePage === "both";
   const hoverRotate = activePage === "both" ? -180 : 180;
+
+  // 1. Initialize the audio hook
+  const { playHover, playClick } = useNeonAudio();
 
   // State to track if the user broke the balance
   const [isGlitching, setIsGlitching] = useState(false);
@@ -19,7 +23,7 @@ export default function YinYangButton({ onClick, text, activePage }) {
       if (!isGlitching) {
         setIsGlitching(true);
 
-        // 1. Fire a violent, jagged animation sequence
+        // Fire a violent, jagged animation sequence
         await glitchControls.start({
           x: [0, -15, 15, -15, 15, -10, 10, 0],
           y: [0, 15, -15, 15, -15, 10, -10, 0],
@@ -33,7 +37,7 @@ export default function YinYangButton({ onClick, text, activePage }) {
           transition: { duration: 0.5, ease: "linear" },
         });
 
-        // 2. Lock them out for 1.5 seconds before they can try again
+        // Lock them out for 1.5 seconds before they can try again
         setTimeout(() => {
           setIsGlitching(false);
         }, 1500);
@@ -44,6 +48,10 @@ export default function YinYangButton({ onClick, text, activePage }) {
   // Block the routing click if the button is currently glitching
   const safeOnClick = (e) => {
     if (isGlitching) return;
+    
+    // 2. Play the click audio before routing
+    playClick(); 
+    
     if (onClick) onClick(e);
   };
 
@@ -60,7 +68,10 @@ export default function YinYangButton({ onClick, text, activePage }) {
       />
 
       <motion.div
-        // 1. Make it draggable, but bound heavily to its starting position (0,0)
+        // 3. Add the hover sound trigger here
+        onMouseEnter={!isGlitching ? playHover : undefined}
+        
+        // Make it draggable, but bound heavily to its starting position (0,0)
         drag
         dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
         dragElastic={0.15} // Acts like a stiff rubber band
@@ -86,7 +97,7 @@ export default function YinYangButton({ onClick, text, activePage }) {
           </g>
         </svg>
 
-        {/* 2. The secret warning text that flashes inside the button */}
+        {/* The secret warning text that flashes inside the button */}
         {isGlitching && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.5 }}
@@ -103,7 +114,7 @@ export default function YinYangButton({ onClick, text, activePage }) {
         )}
       </motion.div>
 
-      {/* 3. The bottom text switches to ERROR during the glitch */}
+      {/* The bottom text switches to ERROR during the glitch */}
       {text && (
         <span className={`absolute -bottom-10 left-1/2 -translate-x-1/2 z-10 text-[10px] font-black tracking-[0.4em] uppercase group-hover:text-current transition-colors duration-500 whitespace-nowrap ${isGlitching ? 'text-red-500' : 'text-zinc-500'}`}>
           {isGlitching ? 'ERROR' : text}

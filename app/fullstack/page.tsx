@@ -6,10 +6,14 @@ import { useRouter } from "next/navigation";
 import YinYangButton from "@/components/YinYangButton";
 import BackgroundEffects from "@/components/BackgroundEffects";
 import MagneticWrapper from "@/components/MagneticWrapper"; // <-- Imported Magnet
+import { useNeonAudio } from "@/app/hooks/useNeonAudio"; // 1. Import the audio hook
 
 export default function FullStackPage() {
   const router = useRouter();
   const [isExiting, setIsExiting] = useState(false);
+
+  // 2. Initialize the audio hook
+  const { playHover } = useNeonAudio();
 
   const cinematicEase = [0.16, 1, 0.3, 1];
 
@@ -80,7 +84,13 @@ export default function FullStackPage() {
             
             <div className="space-y-10 text-left md:text-right">
               {skills.front.map((s, i) => (
-                <motion.div key={s.name} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.0, ease: cinematicEase, delay: 0.6 + (i * 0.1) }}>
+                <motion.div 
+                  key={s.name} 
+                  initial={{ opacity: 0, x: -20 }} 
+                  animate={{ opacity: 1, x: 0 }} 
+                  transition={{ duration: 1.0, ease: cinematicEase, delay: 0.6 + (i * 0.1) }}
+                  onMouseEnter={playHover} // 3a. Audio on Frontend Skills
+                >
                   <MagneticWrapper className="py-2 group cursor-default">
                     <div className="flex justify-between md:flex-row-reverse text-[10px] font-bold uppercase text-black/50 group-hover:text-black mb-3 transition-colors duration-300">
                       <span className="md:ml-4 tracking-widest group-hover:tracking-[0.3em] transition-all duration-300">{s.name}</span>
@@ -108,7 +118,13 @@ export default function FullStackPage() {
             
             <div className="space-y-10">
               {skills.back.map((s, i) => (
-                <motion.div key={s.name} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.0, ease: cinematicEase, delay: 0.6 + (i * 0.1) }}>
+                <motion.div 
+                  key={s.name} 
+                  initial={{ opacity: 0, x: 20 }} 
+                  animate={{ opacity: 1, x: 0 }} 
+                  transition={{ duration: 1.0, ease: cinematicEase, delay: 0.6 + (i * 0.1) }}
+                  onMouseEnter={playHover} // 3b. Audio on Backend Skills
+                >
                   <MagneticWrapper className="py-2 group cursor-default">
                     <div className="flex justify-between text-[10px] font-bold uppercase text-white/50 group-hover:text-white mb-3 transition-colors duration-300">
                       <span className="tracking-widest group-hover:tracking-[0.3em] transition-all duration-300">{s.name}</span>
@@ -136,7 +152,11 @@ export default function FullStackPage() {
           <span className="text-[9px] font-black tracking-[1em] uppercase text-zinc-500">Core Integrations</span>
         </div>
         {skills.integration.map((s, i) => (
-          <div key={s.name} className="flex flex-col items-center">
+          <div 
+            key={s.name} 
+            className="flex flex-col items-center"
+            onMouseEnter={playHover} // 3c. Audio on Integration Footer
+          >
             {/* Added subtle magnet to the footer items too! */}
             <MagneticWrapper className="flex flex-col items-center py-2 group cursor-default">
               <span className="text-[10px] font-bold uppercase text-white/50 group-hover:text-white transition-colors duration-300 mb-2">{s.name}</span>

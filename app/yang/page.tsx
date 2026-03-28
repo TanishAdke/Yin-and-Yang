@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import YinYangButton from "@/components/YinYangButton";
 import BackgroundEffects from "@/components/BackgroundEffects";
 import MagneticWrapper from "@/components/MagneticWrapper"; // <-- Imported Magnet
+import { useNeonAudio } from "@/app/hooks/useNeonAudio"; // 1. Import the audio hook
 
 const skills = [
   { name: "Node.js / Express", level: 90 },
@@ -18,6 +19,9 @@ const skills = [
 export default function YangPage() {
   const router = useRouter();
   const [isExiting, setIsExiting] = useState(false);
+
+  // 2. Initialize the hover sound
+  const { playHover } = useNeonAudio();
 
   const cinematicEase = [0.16, 1, 0.3, 1];
 
@@ -101,6 +105,7 @@ export default function YangPage() {
                 initial={{ opacity: 0, x: 20 }} 
                 animate={{ opacity: 1, x: 0 }} 
                 transition={{ duration: 1.0, ease: cinematicEase, delay: 1.0 + (i * 0.1) }} 
+                onMouseEnter={playHover} // 3. Attached the hover sound to the skill wrapper
               >
                 {/* INVERTED MAGNET: Stretches to pure white on hover */}
                 <MagneticWrapper className="py-2 group cursor-default">
