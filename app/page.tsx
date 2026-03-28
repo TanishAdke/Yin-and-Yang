@@ -9,11 +9,11 @@ import MagneticWrapper from "@/components/MagneticWrapper";
 import { useNeonAudio } from "@/app/hooks/useNeonAudio"; // 1. Imported the audio hook
 
 const skills = [
-  { name: "React / Next.js", level: 95 },
-  { name: "TypeScript", level: 88 },
-  { name: "Tailwind CSS", level: 92 },
-  { name: "UI/UX Design", level: 80 },
-  { name: "Framer Motion", level: 85 },
+  { name: "Adobe Premiere Pro", level: 70 },
+  { name: "Adobe After Effects", level: 55 },
+  { name: "Photoshop", level: 80 },
+  { name: "Vegas Pro 16", level: 95 },
+  { name: "Sapphire/BCC/Universe", level: 85 },
 ];
 
 export default function YinPage() {
@@ -77,7 +77,7 @@ export default function YinPage() {
           >
             Tanish Adke
           </motion.h1>
-          <p className="text-xl tracking-[0.3em] uppercase opacity-50 mb-12">Class of 2027 • Frontend</p>
+          <p className="text-xl tracking-[0.3em] uppercase opacity-50 mb-12">Class of 2027 • Video Editing</p>
           
           <div className="space-y-6">
             {skills.map((skill, i) => (

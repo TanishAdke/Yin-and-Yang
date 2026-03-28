@@ -37,7 +37,7 @@ export function useNeonAudio() {
 
     // VOLUME BOOST: Ramping up to 0.5 (50% max volume)
     gainNode.gain.setValueAtTime(0.0001, ctx.currentTime);
-    gainNode.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.1); 
+    gainNode.gain.linearRampToValueAtTime(0.2, ctx.currentTime + 0.1); 
     gainNode.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
 
     osc.connect(gainNode);

@@ -9,11 +9,11 @@ import MagneticWrapper from "@/components/MagneticWrapper"; // <-- Imported Magn
 import { useNeonAudio } from "@/app/hooks/useNeonAudio"; // 1. Import the audio hook
 
 const skills = [
-  { name: "Node.js / Express", level: 90 },
-  { name: "PostgreSQL / Prisma", level: 85 },
-  { name: "Docker / AWS", level: 75 },
-  { name: "System Architecture", level: 80 },
-  { name: "API Design", level: 92 },
+  { name: "JavaScript / TypeScript", level: 90 },
+  { name: "Python", level: 85 },
+  { name: "NextJS", level: 75 },
+  { name: "Java", level: 80 },
+  { name: "API Development", level: 70 },
 ];
 
 export default function YangPage() {
@@ -95,7 +95,7 @@ export default function YangPage() {
             transition={{ duration: 1.2, ease: cinematicEase, delay: 0.8 }}
             className="text-xl tracking-[0.3em] uppercase mb-12"
           >
-            Class of 2027 • Backend
+            Class of 2027 • Programming
           </motion.p>
           
           <div className="space-y-6">
