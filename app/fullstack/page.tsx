@@ -14,7 +14,7 @@ export default function FullStackPage() {
   const [exitTarget, setExitTarget] = useState<"video" | "code" | "center" | null>(null);
   const { playHover, playClick } = useNeonAudio();
 
-  const cinematicEase = [0.16, 1, 0.3, 1];
+  const cinematicEase = [0.16, 1, 0.3, 1] as const;
 
   const handleTransition = (target: "video" | "code" | "center") => {
     playClick();
@@ -31,16 +31,16 @@ export default function FullStackPage() {
 
   const skills = {
     editing: [
-     { name: "Fast Paced Editing", level: 70 },
-     { name: "Cinematic Editing", level: 55 },
-      { name: "Color Grading", level: 80 },
-      { name: "Cinematography", level: 95 },
+     { name: "Fast Paced Editing", level: "70%"},
+     { name: "Cinematic Editing", level: "55%" },
+      { name: "Color Grading", level: "80%"},
+      { name: "Cinematography", level: "95%" },
     ],
     programming: [
-     { name: "UI/UX Design", level: 90 },
-  { name: "Machine Learning", level: 85 },
-  { name: "Object Oriented Programming", level: 80 },
-  { name: "API Development", level: 70 },
+     { name: "UI/UX Design", level: "90%"},
+  { name: "Machine Learning", level: "85%" },
+  { name: "Object Oriented Programming", level: "80%" },
+  { name: "API Development", level: "70%" },
     ],
     integration: [
       { name: "Creative Direction", level: "92%" },
