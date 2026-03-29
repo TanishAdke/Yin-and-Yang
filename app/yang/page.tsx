@@ -23,7 +23,7 @@ export default function YangPage() {
   // 2. Initialize the hover sound
   const { playHover } = useNeonAudio();
 
-  const cinematicEase = [0.16, 1, 0.3, 1];
+  const cinematicEase = [0.16, 1, 0.3, 1] as const;
 
   const handleTransition = () => {
     setIsExiting(true);

@@ -3,8 +3,15 @@
 import React, { useRef } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
-export default function MagneticWrapper({ children, className = "" }) {
-  const ref = useRef(null);
+// 1. Define the props so TypeScript knows what 'children' is
+interface MagneticWrapperProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export default function MagneticWrapper({ children, className = "" }: MagneticWrapperProps) {
+  // 2. Strictly type the ref to an HTMLDivElement
+  const ref = useRef<HTMLDivElement>(null);
   
   // Motion values track the pull offset
   const x = useMotionValue(0);
@@ -15,7 +22,8 @@ export default function MagneticWrapper({ children, className = "" }) {
   const springX = useSpring(x, springConfig);
   const springY = useSpring(y, springConfig);
 
-  const handleMouseMove = (e) => {
+  // 3. Type the mouse event so we can safely read clientX/clientY
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
     const { left, top, width, height } = ref.current.getBoundingClientRect();
     
@@ -23,7 +31,7 @@ export default function MagneticWrapper({ children, className = "" }) {
     const centerX = left + width / 2;
     const centerY = top + height / 2;
 
-    // Calculate how far the mouse is from the center, and pull it by 15%
+    // Calculate how far the mouse is from the center, and pull it by 10%
     const distanceX = (e.clientX - centerX) * 0.10;
     const distanceY = (e.clientY - centerY) * 0.10;
 

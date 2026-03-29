@@ -11,12 +11,19 @@ export function useNeonAudio() {
     if (typeof window === "undefined") return null;
 
     if (!globalAudioCtx) {
-      globalAudioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      // FIX 1: Safely cast the window object to satisfy the strict TypeScript linter (No 'any'!)
+      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      
+      if (!AudioContextClass) return null; // Failsafe for very old browsers
+      
+      globalAudioCtx = new AudioContextClass();
     }
     
-    // Unlock audio if the browser suspended it
+    // FIX 2: Unlock audio if suspended, and silently catch the error if the user hasn't clicked the page yet
     if (globalAudioCtx.state === "suspended") {
-      globalAudioCtx.resume();
+      globalAudioCtx.resume().catch(() => {
+        // Browser is blocking audio until first click. We ignore this silently.
+      });
     }
     
     return globalAudioCtx;

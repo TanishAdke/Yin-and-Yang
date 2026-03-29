@@ -82,7 +82,8 @@ export default function CodeProject({
                 <div className="flex flex-wrap gap-2 pl-4">
                   {techStack.map((tech) => (
                     <span key={tech} className="px-2 py-1 bg-zinc-900 border border-zinc-800 text-green-400 text-[10px] tracking-widest uppercase">
-                      "{tech}"
+                      {/* FIX: Replaced raw quotes with HTML entities */}
+                      &quot;{tech}&quot;
                     </span>
                   ))}
                 </div>
