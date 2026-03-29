@@ -53,7 +53,7 @@ export default function YinPage() {
                   onLayoutAnimationComplete={() => router.push("/yang")}
                   className="rounded-full p-2"
                 >
-                  <YinYangButton activePage="yang" />
+                  <YinYangButton activePage="yang" text="" onClick={() => {}} />
                 </motion.div>
               </div>
 
