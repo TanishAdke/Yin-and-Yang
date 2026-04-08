@@ -13,6 +13,7 @@ const CODE_PROJECTS = [
   { id: "YouTube Downloader", title: "YouTube Downloader executable", description: "A simple executable for downloading YouTube videos.", techStack: ["Python", "yt-dlp", "ffmpeg"], githubUrl: "https://github.com/TanishAdke/YouTubeDownloader.git" },
   { id: "Socket_Chat", title: "Text app", description: "Real-time chat application built with WebSockets, featuring dynamic rooms and user authentication.", techStack: ["Java", "JavaFX", "Socket.io"], githubUrl: "https://github.com/TanishAdke/SocketChat-JavaFX.git" },
   { id: "Atmosphere", title: "Atmosphere", description: "A simple weather checking application with API integration.", techStack: ["CSS", "HTML", "JavaScript","API Integration"], githubUrl: "https://github.com/TanishAdke/WeatherChecker.git" },
+  { id: "Simulator", title: "Cloud Simulation", description: "A Cloud Bucket system simulator that reciprocates GET, RESET, STATE, STEP, END functionalities", techStack: ["Python", "LiteLLM","Llama API"], githubUrl:"https://github.com/TanishAdke/Cloud-Simulation?tab=readme-ov-file"}, 
 ];
 
 export default function CodePage() {
